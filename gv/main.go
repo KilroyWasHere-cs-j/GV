@@ -1,15 +1,19 @@
 package main
 
 import (
-  // "flag"
+  "flag"
+  "fmt"
 )
 
 const DES_NAM = "description"
 const GIT_DIR = ".git/"
 
-func main() { 
-    // flag.StringVar(&folder, "add", "", "add a new folder to scan for Git repositories")
-    // flag.StringVar(&email, "email", "your@email.com", "the email to scan")
-    // flag.Parse()
-    generateBasicReport()
+func main() {
+  all := flag.Bool("all", false, "Run with everything")
+  flag.Parse()
+
+  fmt.Println("")
+  if *all {
+    compileBasicReport()
+  }
 } 

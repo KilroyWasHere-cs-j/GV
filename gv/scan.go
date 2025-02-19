@@ -8,6 +8,8 @@ import (
   "io/ioutil"
   "log"
   "strings"
+  "regexp"
+  "strconv"
 )
 
 // Function to get the current working directory
@@ -30,18 +32,29 @@ func getExecutableDir() string {
 	return filepath.Dir(execPath) // Extract the directory from the executable path
 }
 
-func getBranches() {
-  var path = "../" + GIT_DIR + "/refs/heads"
-
-  files, err := ioutil.ReadDir(path)
+func getFiles(path string) string {
+  var r = "["
+  path = "../" + GIT_DIR + path
+  input, err := ioutil.ReadFile(path)
 
   if err != nil {
     log.Fatal(err)
   }
 
-  for _, file := range files {
-    fmt.Println(file)
+  re := regexp.MustCompile(`refs/remotes/origin/(\S+)`)
+	matches := re.FindAllString(string(input), -1)
+
+  for i, match := range matches {
+    // Literally just for formating
+    if i != 0 {
+      f := strings.Split(match, "/")
+      r = r + string(" " + f[(len(f) - 1)])
+    } else {
+      f := strings.Split(match, "/")
+      r = r + string(f[(len(f) - 1)])
+    }
   }
+  return r + "]"
 }
 
 func getCurrentBranch(path string) string {
@@ -56,7 +69,7 @@ func getCurrentBranch(path string) string {
   return result[(len(result) - 1)]
 }
 
-func getUseableHooks(path string) int {
+func getUseableHooks(path string) string {
   var useablehooks = 0
   path = "../" + GIT_DIR + path 
   files, err := ioutil.ReadDir(path)
@@ -73,7 +86,7 @@ func getUseableHooks(path string) int {
     }
   }
 
-  return useablehooks
+  return strconv.Itoa(useablehooks)
 }
 
 // func getStaged() []string {}

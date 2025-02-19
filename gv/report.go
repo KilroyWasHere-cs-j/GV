@@ -2,18 +2,32 @@ package main
 
 import (
   "fmt"
+
+  "github.com/fatih/color"
 )
 
 func collect(){}
 
-func generateBasicReport() {
-  getBranches() 
-  fmt.Println("Cur branch -     ", getCurrentBranch("HEAD"))
-  fmt.Println("Useable hooks -    ", getUseableHooks("hooks"))
-  fmt.Println("Repo Des -     ", readFile(DES_NAM))
-  fmt.Println("OS   -   ", getOS())
-  fmt.Println("Sys Arch  -   ", getArch())
-  fmt.Println("Cur Dir -    ", getCurrentDir())
-  fmt.Println("Exe Dir -    ", getExecutableDir())
+func compileBasicReport() {
+  fmt.Println("")
+  userInfo()
+  branchInfo()
+  repoMetaData() 
 }
 
+func branchInfo() {
+  color.Green("Branches -     %s", getFiles("packed-refs")) 
+  color.Green("Cur branch -    %s", getCurrentBranch("HEAD"))
+}
+
+func repoMetaData() {
+  color.Blue("Useable hooks -   %s", getUseableHooks("hooks"))
+  color.Blue("Repo Des -     %s", readFile(DES_NAM))
+}
+
+func userInfo() {
+  color.Red("OS   -   %s", getOS())
+  color.Red("Sys Arch  -   %s", getArch())
+  color.Red("Cur Dir -    %s", getCurrentDir())
+  color.Red("Exe Dir -    %s", getExecutableDir())
+}
